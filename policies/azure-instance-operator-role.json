@@ -1,0 +1,25 @@
+{
+    "id": "/subscriptions/01b11e21-86fd-41f1-a705-db9a0c1894a2/providers/Microsoft.Authorization/roleDefinitions/075924da-87a6-47c5-bd78-604ab3ac78c5",
+    "properties": {
+        "roleName": "AzureInstanceOperatorSep24",
+        "description": "",
+        "assignableScopes": [
+            "/subscriptions/01b11e21-86fd-41f1-a705-db9a0c1894a2"
+        ],
+        "permissions": [
+            {
+                "actions": [
+                    "Microsoft.Compute/virtualMachines/read",
+                    "Microsoft.Compute/virtualMachines/start/action",
+                    "Microsoft.Compute/virtualMachines/restart/action",
+                    "Microsoft.Compute/virtualMachines/deallocate/action",
+                    "Microsoft.Network/networkInterfaces/read",
+                    "Microsoft.Network/publicIPAddresses/read"
+                ],
+                "notActions": [],
+                "dataActions": [],
+                "notDataActions": []
+            }
+        ]
+    }
+}
