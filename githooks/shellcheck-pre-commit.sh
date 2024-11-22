@@ -1,24 +1,32 @@
 #!/bin/bash
 
-# Declaring variables
-SHELL_CHECK_VERSION="v0.10.0"
-SHELL_FILES=$(git diff --cached --name-only | grep -E "\.sh$")
-SHELL_CHECK_BINARY="/tmp/shellcheck-${SHELL_CHECK_VERSION}/shellcheck"
 
 if command -v shellcheck > /dev/null; then
-  echo "INFO: Shellcheck is already installed, skipping installation"
-  exit 1
+  SHELL_CHECK_BINARY=$(command -v shellcheck)
+  SHELL_CHECK_INSTALLED=0
 else
-  echo "INFO: Proceeding Installation"
-  # Installing Package
-  wget https://github.com/koalaman/shellcheck/releases/download/${SHELL_CHECK_VERSION}/shellcheck-${SHELL_CHECK_VERSION}.linux.x86_64.tar.xz -O /tmp/shellcheck-${SHELL_CHECK_VERSION}.linux.x86_64.tar.xz
-  tar -xf /tmp/shellcheck-${SHELL_CHECK_VERSION}.linux.x86_64.tar.xz -C /tmp/ > /dev/null
-  # Deleting the file
-  rm -rf /tmp/shellcheck-${SHELL_CHECK_VERSION}.linux.x86_64.tar.xz
+  SHELL_CHECK_VERSION="0.10.0"
+  SHELL_CHECK_BINARY="/tmp/${SHELL_CHECK_VERSION}/shellcheck"
+  SHELL_CHECK_INSTALLED=1
 fi
 
+if [[ ${SHELL_CHECK_INSTALLED} -eq 1 ]]; then
+
+  rm -f $SHELL_CHECK_BINARY
+
+  wget -q https://github.com/koalaman/shellcheck/releases/download/v${SHELL_CHECK_VERSION}/shellcheck-v${SHELL_CHECK_VERSION}.linux.x86_64.tar.xz \
+    -O /tmp/shellcheck-v${SHELL_CHECK_VERSION}.tar.xz
+
+  tar -xf /tmp/shellcheck-v${SHELL_CHECK_VERSION}.tar.xz -C /tmp/ > /dev/null
+  rm -rf /tmp/shellcheck-v${SHELL_CHECK_VERSION}.tar.xz
+fi
+
+SHELL_FILES=$(git diff --cached --name-only | grep -E "\.sh$")
+
 if [[ -n "${SHELL_FILES}" ]]; then
+  # shellcheck disable=SC2046
   $SHELL_CHECK_BINARY $(echo $SHELL_FILES) --severity=warning
+
   if [[ $? -ne 0 ]]; then
     echo
     echo "ERROR: shellcheck detected warning or errors, please see above and fix the issue(s)."
@@ -26,4 +34,3 @@ if [[ -n "${SHELL_FILES}" ]]; then
     exit 1
   fi
 fi
-exit 0
