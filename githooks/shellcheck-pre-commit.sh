@@ -34,3 +34,4 @@ if [[ -n "${SHELL_FILES}" ]]; then
     exit 1
   fi
 fi
+exit 0
