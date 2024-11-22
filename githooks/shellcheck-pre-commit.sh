@@ -19,7 +19,6 @@ fi
 
 if [[ -n "${SHELL_FILES}" ]]; then
   $SHELL_CHECK_BINARY $(echo $SHELL_FILES) --severity=warning
-  
   if [[ $? -ne 0 ]]; then
     echo
     echo "ERROR: shellcheck detected warning or errors, please see above and fix the issue(s)."
