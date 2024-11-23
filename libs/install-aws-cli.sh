@@ -21,7 +21,7 @@ else
   rm -f /tmp/awscliv2.zip
   #installing aws cli
   sudo ./opt/aws/install --bin-dir /usr/local/bin --install-dir /usr/local/aws-cli
-  
+
   #post installation validation
   command -v aws > /dev/null
   RETURN_CODE=${?}
