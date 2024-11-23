@@ -2,4 +2,4 @@
 #
 # link_file: .git/hooks/pre-commit
 
-. githooks/shellcheck-pre-commit.sh
+bash githooks/shellcheck-pre-commit.sh
