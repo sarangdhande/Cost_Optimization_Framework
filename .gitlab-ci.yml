@@ -18,6 +18,8 @@ shellformat:
   script:
     - echo "Checking and applying shellformatting"
     - ./shfmt -i 2 -w .
+  only:
+    - merge_requests
 
 shellcheck:
   stage: lint
@@ -26,8 +28,12 @@ shellcheck:
   script:
     - shellcheck-v${SHELLCHECK_VERSION}/shellcheck --version
     - find . -type f -name "*.sh" -exec shellcheck-v${SHELLCHECK_VERSION}/shellcheck --severity=warning {} +
+  only:
+    - merge_requests
 
 secret-scan:
   stage: security
   script:
     - echo "Running detect-secret scan"
+  only:
+    - merge_requests
