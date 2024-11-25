@@ -1,7 +1,40 @@
+# Define stage
 stages:
+  - style
   - lint
+  - security
+
+# Define global variables
+variables:
+  SHELLCHECK_VERSION: "0.9.0"
+
+# Define jobs
+shellformat:
+  stage: style
+  before_script:
+    - wget https://github.com/mvdan/sh/releases/download/v3.10.0/shfmt_v3.10.0_linux_amd64
+    - mv shfmt_v3.10.0_linux_amd64 shfmt
+    - chmod +x shfmt
+  script:
+    - echo "Checking and applying shellformating to scripts."
+    - ./shfmt -i 2 -w .
+  only:
+    - merge_requests
 
 shellcheck:
   stage: lint
+  before_script:
+    - curl -sSL "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJ
   script:
-    - echo "Running shellcheck scan"
+    - shellcheck-v${SHELLCHECK_VERSION}/shellcheck --version
+    - find . -type f -name "*.sh" -exec shellcheck-v${SHELLCHECK_VERSION}/shellcheck --severity=warning {} +
+  only:
+    - merge_requests
+
+secret-scan:
+  stage: security
+  script:
+    - echo "Running detect-secret scan"
+  only:
+    - merge_requests
+
