@@ -1,0 +1,8 @@
+stages:
+  - lint
+  - security scan
+
+shellcheck:
+  - stage: lint
+  - script:
+    - echo "Running shellcheck scan"
