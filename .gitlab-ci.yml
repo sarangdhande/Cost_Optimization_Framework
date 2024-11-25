@@ -1,14 +1,14 @@
-# Define Stages
+# Define stage
 stages:
   - style
   - lint
   - security
 
-# Define variables
+# Define global variables
 variables:
-  SHELL_CHECK_VERSION: "0.10.0"
+  SHELLCHECK_VERSION: "0.9.0"
 
-# Define Jobs
+# Define jobs
 shellformat:
   stage: style
   before_script:
@@ -16,7 +16,7 @@ shellformat:
     - mv shfmt_v3.10.0_linux_amd64 shfmt
     - chmod +x shfmt
   script:
-    - echo "Checking and applying shellformatting"
+    - echo "Checking and applying shellformating to scripts."
     - ./shfmt -i 2 -w .
   only:
     - merge_requests
@@ -37,3 +37,4 @@ secret-scan:
     - echo "Running detect-secret scan"
   only:
     - merge_requests
+
