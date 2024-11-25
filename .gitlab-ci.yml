@@ -1,6 +1,5 @@
 stages:
   - lint
-  - security scan
 
 shellcheck:
   - stage: lint
