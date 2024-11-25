@@ -2,6 +2,6 @@ stages:
   - lint
 
 shellcheck:
-  - stage: lint
-  - script:
+  stage: lint
+  script:
     - echo "Running shellcheck scan"
