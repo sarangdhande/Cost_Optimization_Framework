@@ -1,7 +1,33 @@
+# Define Stages
 stages:
+  - style
   - lint
+  - security
+
+# Define variables
+variables:
+  SHELL_CHECK_VERSION: "0.10.0"
+
+# Define Jobs
+shellformat:
+  stage: style
+  before_script:
+    - wget https://github.com/mvdan/sh/releases/download/v3.10.0/shfmt_v3.10.0_linux_amd64
+    - mv shfmt_v3.10.0_linux_amd64 shfmt
+    - chmod +x shfmt
+  script:
+    - echo "Checking and applying shellformatting"
+    - ./shfmt -i 2 -w .
 
 shellcheck:
   stage: lint
+  before_script:
+    - wget https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz | tar -xJ
   script:
-    - echo "Running shellcheck scan"
+    - shellcheck-v${SHELLCHECK_VERSION}/shellcheck --version
+    - find . -type f -name "*.sh" -exec shellcheck-v${SHELLCHECK_VERSION}/shellcheck --severity=warning {} +
+
+secret-scan:
+  stage: security
+  script:
+    - echo "Running detect-secret scan"
