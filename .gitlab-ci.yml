@@ -22,7 +22,7 @@ shellformat:
 shellcheck:
   stage: lint
   before_script:
-    - wget https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz | tar -xJ
+    - curl -sSL "https://github.com/koalaman/shellcheck/releases/download/v${SHELLCHECK_VERSION}/shellcheck-v${SHELLCHECK_VERSION}.linux.x86_64.tar.xz" | tar -xJ
   script:
     - shellcheck-v${SHELLCHECK_VERSION}/shellcheck --version
     - find . -type f -name "*.sh" -exec shellcheck-v${SHELLCHECK_VERSION}/shellcheck --severity=warning {} +
