@@ -2,8 +2,8 @@ repos:
 - repo: https://github.com/pre-commit/pre-commit-hooks
   rev: v4.0.1
   hooks:
+    - id: check-added-large-files
     - id: trailing-whitespace
-    - id: end-of-file-fixer
     - id: check-yaml
     - id: check-json
 
@@ -12,3 +12,10 @@ repos:
   hooks:
     - id: detect-secrets
       exclude: README.md
+
+- repo: local
+  hooks:
+  - id: shellcheck
+    name: shellcheck-pre-commit-hook
+    entry: githooks/shellcheck-pre-commit.sh
+    language: script
