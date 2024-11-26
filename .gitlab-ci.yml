@@ -36,6 +36,8 @@ largefile:
       fi
   only:
     - merge_requests
+  needs:
+    - shellformat
 
 shellcheck:
   stage: lint
@@ -59,4 +61,7 @@ secret-scan:
     - detect-secrets scan > .secrets.baseline
   only:
     - merge_requests
+  artifacts:
+    paths:
+      - .secrets.baseline
 
