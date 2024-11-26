@@ -51,7 +51,7 @@ secret-scan:
   stage: security
   before_script:
     - apt update
-    - apt install python3 python3-pip python3-env
+    - apt install python3 python3-pip python3-venv
   script:
     - python3 -m venv detect-secret
     - bash detect-secret/bin/activate
