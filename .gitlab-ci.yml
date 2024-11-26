@@ -8,6 +8,11 @@ stages:
 variables:
   SHELLCHECK_VERSION: "0.9.0"
 
+# Define defaults
+default:
+  tags:
+    - aws-sep24
+
 # Define jobs
 shellformat:
   stage: validate
@@ -36,6 +41,8 @@ largefile:
       fi
   only:
     - merge_requests
+  needs:
+    - shellformat
 
 shellcheck:
   stage: lint
@@ -49,6 +56,8 @@ shellcheck:
 
 secret-scan:
   stage: security
+  tags:
+    - gitlab-org
   before_script:
     - apt-get update -qy
     - apt-get install -y python3 python3-pip python3-venv
@@ -59,4 +68,7 @@ secret-scan:
     - detect-secrets scan > .secrets.baseline
   only:
     - merge_requests
+  artifacts:
+    paths:
+      - .secrets.baseline
 
