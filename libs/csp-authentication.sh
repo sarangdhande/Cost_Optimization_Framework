@@ -1,6 +1,6 @@
 #!/bin/bash
 #Define variables
-CREDENTIAL_FILE=".cof/csp-auth.yaml"
+CREDENTIAL_FILE="$1"
 
 # aws authN
 AWS_ACCESS_KEY_ID=$(yq -r '.auth_configs.aws.access_key' $CREDENTIAL_FILE)
