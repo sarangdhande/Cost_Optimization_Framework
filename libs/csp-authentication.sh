@@ -27,8 +27,20 @@ az login --service-principal \
   --allow-no-subscriptions
 
 # Validate login
-aws sts get-caller-identity
+if aws sts get-caller-identity > /dev/null 2>&1; then
+  iam_user=$(aws sts get-caller-identity --query 'Arn' --output text)
+  echo "INFO: Successfully logged in with AWS IAM User $iam_user"
+else
+  echo "ERROR: Unexpected error occured while authentication with IAM User"
+  exit 1
+fi
 
 # Validate login
-az account show
-az ad sp show --id "${AZURE_CLIENT_ID}"
+if az account show > /dev/null 2>&1; then
+  azsp_id=$(az ad sp show --query 'user.name' -o tsv)
+  azsp_name=$(az ad sp show --id $azsp_id --query 'appDisplayName' -o tsv)
+  echo "INFO: Successfully looged in with Azure Service Principle $azsp_name/$azsp_id"
+else
+  echo "ERROR: Unexpected error occured during authenticating with service principle"
+  exit1
+fi
