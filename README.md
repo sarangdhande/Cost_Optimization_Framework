@@ -11,6 +11,7 @@ Add tag to all the instances which will be shutdown/start using cost optimizatio
 ```
 shutdown: true
 ```
+
 ### 2. Authentication configuration
 
 In Development environment, authentication is performed via a local YAML configuration file. Stored at default location `~/.cof/csp_auth.yaml` or `.cof/csp_auth.yaml`, however, authentication file path can be supplied at the runtime as script parameter to csp-authentication.sh script.
@@ -33,11 +34,13 @@ auth_configs:
 
 ### 3. Configure mail server
 
-Ensure mail server is configured on runner instance to send email. Follow instruction documented in [configure-gmail-stmp.md](./docs/configure-gmail-stmp.md) for configuring gmail smtp.
+Ensure mail server is configured on runner instance to send email. Follow instruction documented in [configure-gmail-stmp.md](./docs/configure-gmail-stmp.md) for configuring gmail stmp.
 
 <br>
 
 ## Usage
+
+### Local execution
 
 Execute init script to either start/stop VMs.
 
@@ -47,6 +50,28 @@ init.sh --action stop
 init.sh --action start
 
 ```
+
+### Schedule using Linux cron
+Open a crontab file and configure start/stop schedule
+
+```
+# list cron entries
+crontab -l
+
+# edit cron entries
+crontab -e
+```
+
+Instance Shutdown job everyday at 9 PM Mon to Friday.
+```
+0 8 * * 1-5 cd /opt/cof/latest && init.sh --action start
+```
+
+Instance Start job everyday
+```
+0 21 * * 1-5 cd /opt/cof/latest && init.sh --action stop
+```
+
 <br>
 
 ## Supported Cloud Vendors & Services Matrix
@@ -59,8 +84,12 @@ init.sh --action start
 | Azure | VMSS     | No            | No          | No       | N/A    |
 | Azure | AzureSQL | No            | No          | No       | N/A    |
 
+
+
 ## Contributor
 
+
 ## Future support
+
 
 ## License
