@@ -1,0 +1,59 @@
+name: COF-CI
+on: [push]
+jobs:
+  ci-validation:
+    runs-on: ubuntu-latest
+
+    env:
+      LARGE_FILE: large_file.txt
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Report largefile
+        run: |
+          echo "Checking for files larger than 500KB"
+          find -type f -size +500k > large_file.txt
+          if [ -s large_file.txt ]; then
+            echo "The following files are larger than 500KB"
+            cat large_file.txt
+            exit 1
+          else
+            echo "No files larger than 500KB found"
+          fi
+
+      - name: Download shfmt
+        run: |
+            wget https://github.com/mvdan/sh/releases/download/v3.10.0/shfmt_v3.10.0_linux_amd64
+            mv shfmt_v3.10.0_linux_amd64 shfmt
+            chmod +x shfmt
+
+      - name: Run shfmt
+        run: ./shfmt -i 2 -w .
+
+      - name: Run shellcheck scan
+        uses: ludeeus/action-shellcheck@master
+        with:
+          severity: warning
+        env:
+          SHELLCHECK_OPTS: -e SC2088
+  security-scan:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo apt-get update -qy
+          sudo apt-get install -y python3 python3-pip python3-venv jq
+
+      - name: Run detect-secrets
+        run: |
+          python3 -m venv venv
+          source venv/bin/activate
+          pip install detect-secrets
+          detect-secrets scan
+          detect-secrets scan | jq -r '.results | .[]'
